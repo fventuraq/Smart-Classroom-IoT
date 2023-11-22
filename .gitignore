@@ -1,0 +1,23 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+fiware-frontend/node_modules
+fiware-frontend/.pnp
+fiware-frontend/.pnp.js
+
+# testing
+fiware-frontend/coverage
+
+# production
+fiware-frontend/build
+
+# misc
+fiware-frontend/.DS_Store
+fiware-frontend/.env.local
+fiware-frontend/.env.development.local
+fiware-frontend/.env.test.local
+fiware-frontend/.env.production.local
+
+fiware-frontend/npm-debug.log*
+fiware-frontend/yarn-debug.log*
+fiware-frontend/yarn-error.log*
