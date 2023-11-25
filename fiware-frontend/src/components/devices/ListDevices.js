@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { makeStyles, Paper, Typography, Button } from '@material-ui/core';
+import { makeStyles, Paper, Typography, Button, Container, Grid } from '@material-ui/core';
 import fiwareService from '../../services/fiwareService';
 import iotAgentService from '../../services/iotAgentService';
 
@@ -22,9 +22,15 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(2),
         marginTop: theme.spacing(2),
     },
+    notlist: {
+        backgroundColor: '#ffb425',
+        color: 'white',
+        padding: theme.spacing(2),
+        marginTop: theme.spacing(2),
+      },
 }));
 
-const ListDevices= () => {
+const ListDevices = () => {
     const classes = useStyles();
     const [deviceEntities, setDeviceEntities] = useState([]);
     const [error, setError] = useState(null);
@@ -34,11 +40,11 @@ const ListDevices= () => {
             try {
                 // Obtener la lista de entidades universitarias desde FIWARE
                 const response = await fiwareService.getEntitiesIoTAgentByType('Device', 'openiot', '/');
-                console.log('lista de device',response)
+                console.log('lista de device', response)
                 setDeviceEntities(response);
             } catch (error) {
-                console.error('Error al obtener la lista de entidades Device:', error);
-                setError('Error al obtener la lista de entidades Device');
+                console.error('Error getting list of devices:', error);
+                setError('Error getting list of devices!');
             }
         };
 
@@ -55,8 +61,10 @@ const ListDevices= () => {
     };
 
     return (
-        <div className={classes.container}>
-            <h2>List of Device</h2>
+        <Container className={classes.container} style={{ marginTop: '20px' }}>
+            <Typography variant="h3" style={{ marginBottom: '16px' }}>
+                List of Devices
+            </Typography>
             {deviceEntities?.length > 0 ? (
                 <ul>
                     {deviceEntities?.map((entity) => (
@@ -69,8 +77,8 @@ const ListDevices= () => {
                     ))}
                 </ul>
             ) : (
-                <Paper className={classes.error}>
-                    <Typography>No university entities found</Typography>
+                <Paper className={classes.notlist}>
+                    <Typography>There are no registered devices</Typography>
                 </Paper>
             )}
 
@@ -79,17 +87,24 @@ const ListDevices= () => {
                     <Typography>{error}</Typography>
                 </Paper>
             )}
+            <Grid item xs={12}>
+                <Button
+                    variant="contained"
+                    component={RouterLink}
+                    to="/devices/newdevice">
+                    Create Device
+                </Button>
+            </Grid>
 
-            <Button variant="contained" component={RouterLink} to="/devices/newdevice">
-                Create Device
-            </Button>
+            {/*
 
             <Button variant="contained" color="primary" onClick={iotAgentStatus}>
                 IoT
             </Button>
+            */}
 
 
-        </div>
+        </Container>
     );
 };
 

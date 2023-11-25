@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { makeStyles, Paper, Typography, Button } from '@material-ui/core';
+import { makeStyles, Paper, Typography, Button, Container, Grid } from '@material-ui/core';
 import fiwareService from '../../services/fiwareService';
 
 const useStyles = makeStyles((theme) => ({
@@ -21,6 +21,12 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     marginTop: theme.spacing(2),
   },
+  notlist: {
+    backgroundColor: '#ffb425',
+    color: 'white',
+    padding: theme.spacing(2),
+    marginTop: theme.spacing(2),
+  },
 }));
 
 const ListSalas = () => {
@@ -36,8 +42,8 @@ const ListSalas = () => {
         console.log(response)
         setSalaEntities(response);
       } catch (error) {
-        console.error('Error al obtener la lista de entidades salas:', error);
-        setError('Error al obtener la lista de entidades salas');
+        console.error('Error getting list of classroom:', error);
+        setError('Error getting list of classrooms');
       }
     };
 
@@ -45,8 +51,10 @@ const ListSalas = () => {
   }, []);
 
   return (
-    <div className={classes.container}>
-      <h2>List of Salas Entities in FIWARE</h2>
+    <Container className={classes.container} style={{ marginTop: '20px' }}>
+      <Typography variant="h3" style={{ marginBottom: '16px' }}>
+      List of Classroom
+            </Typography>
       {salaEntities?.length > 0 ? (
         <ul>
           {salaEntities?.map((sala) => (
@@ -59,8 +67,8 @@ const ListSalas = () => {
           ))}
         </ul>
       ) : (
-        <Paper className={classes.error}>
-          <Typography>No Salas entities found</Typography>
+        <Paper className={classes.notlist}>
+          <Typography>There are no registered classrooms</Typography>
         </Paper>
       )}
 
@@ -71,9 +79,9 @@ const ListSalas = () => {
       )}
 
       <Button variant="contained" component={RouterLink} to="/entities/newsala">
-        Create Sala
+        Create New Classroom
       </Button>
-    </div>
+    </Container>
   );
 };
 

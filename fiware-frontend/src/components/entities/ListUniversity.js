@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { makeStyles, Paper, Typography, Button } from '@material-ui/core';
+import { makeStyles, Paper, Typography, Button, Container, Grid } from '@material-ui/core';
 import fiwareService from '../../services/fiwareService';
 
 const useStyles = makeStyles((theme) => ({
@@ -21,6 +21,12 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     marginTop: theme.spacing(2),
   },
+  notlist: {
+    backgroundColor: '#ffb425',
+    color: 'white',
+    padding: theme.spacing(2),
+    marginTop: theme.spacing(2),
+  },
 }));
 
 const ListUniversity = () => {
@@ -36,8 +42,8 @@ const ListUniversity = () => {
         console.log(response)
         setUniversityEntities(response);
       } catch (error) {
-        console.error('Error al obtener la lista de entidades universitarias:', error);
-        setError('Error al obtener la lista de entidades universitarias');
+        console.error('Error getting list of universities:', error);
+        setError('Error getting list of universities');
       }
     };
 
@@ -45,22 +51,25 @@ const ListUniversity = () => {
   }, []);
 
   return (
-    <div className={classes.container}>
-      <h2>List of University Entities in FIWARE</h2>
+    <Container className={classes.container} style={{ marginTop: '20px' }}>
+
+      <Typography variant="h3" style={{ marginBottom: '16px' }}>
+        List of Universities
+      </Typography>
       {universityEntities?.length > 0 ? (
         <ul>
           {universityEntities?.map((entity) => (
             <li key={entity.id}>
               <Typography variant="body1">
                 {entity.name.value} -{' '}
-                <RouterLink to={`/entities/campus/${entity.id}`}>View Campuses</RouterLink>
+                <RouterLink to={`/entities/campus/${entity.id}`}>View University</RouterLink>
               </Typography>
             </li>
           ))}
         </ul>
       ) : (
-        <Paper className={classes.error}>
-          <Typography>No university entities found</Typography>
+        <Paper className={classes.notlist}>
+          <Typography>There are no registered universities</Typography>
         </Paper>
       )}
 
@@ -69,11 +78,12 @@ const ListUniversity = () => {
           <Typography>{error}</Typography>
         </Paper>
       )}
-
-      <Button variant="contained" component={RouterLink} to="/entities/newuniversity">
-        Create Entity
-      </Button>
-    </div>
+      <Grid item xs={12}>
+        <Button variant="contained" component={RouterLink} to="/entities/newuniversity">
+          Create New University
+        </Button>
+      </Grid>
+    </Container>
   );
 };
 

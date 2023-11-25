@@ -1,6 +1,6 @@
 // src/components/CreateCamposEntity.js
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, makeStyles, Paper, Typography, Select, MenuItem, InputLabel, FormControl } from '@material-ui/core';
+import { TextField, Button, makeStyles, Paper, Typography, Container, Grid } from '@material-ui/core';
 import fiwareService from '../../services/fiwareService';
 import iotAgentService from '../../services/iotAgentService';
 
@@ -44,7 +44,7 @@ const CreateService = () => {
     //const [andarList, setAndarList] = useState([])
     const [response, setResponse] = useState(null);
     const [success, setSuccess] = useState(false);
-    const [error, setError] = useState(null); 
+    const [error, setError] = useState(null);
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -98,47 +98,63 @@ const CreateService = () => {
         try {
             const iotAgentResponse = await iotAgentService.registerService(serviceData, 'openiot', '/');
             //const iotAgentResponse = await iotAgentService.getTest(serviceData);
-            console.log('Servicio creado en IoT Agent:', iotAgentResponse);
-            setResponse('Servicio creado en IoT Agent');
+            console.log('Service created in IoT Agent:', iotAgentResponse);
+            setResponse('Service created in IoT Agent!');
             setSuccess(true);
         } catch (error) {
-            console.error('Error al crear el servicio:', error);
-            setResponse('Error al crear el servicio');
+            console.error('Error creating service:', error);
+            setResponse('Error creating service!');
             setSuccess(false);
         }
     };
 
     return (
-        <div className={classes.container}>
-            <h2>Create New Sala Entity in FIWARE</h2>
+        <Container className={classes.container} style={{ marginTop: '20px' }}>
+            <Typography variant="h3" style={{ marginBottom: '16px' }}>
+                Create New Service
+            </Typography>
             <form>
-                <TextField
-                    className={classes.input}
-                    label="API key of Service"
-                    name="apikey"
-                    value={entityInfo.apikey}
-                    onChange={handleInputChange}
-                />
-                <br/>
-                <TextField
-                    className={classes.input}
-                    label="Rute of Service(cbroker)"
-                    name="cbroker"
-                    value={entityInfo.cbroker}
-                    onChange={handleInputChange}
-                />
-                <br/>
-                <TextField
-                    className={classes.input}
-                    label="Resource of Service"
-                    name="resource"
-                    value={entityInfo.resource}
-                    onChange={handleInputChange}
-                />
-                <br/>
-                <Button variant="contained" color="primary" onClick={handleCreateEntity}>
-                    Create Service
-                </Button>
+                <Grid container spacing={4}>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            className={classes.input}
+                            label='key = "4jggokgpepnvsb2uv4s40d59ov"'
+                            name="apikey"
+                            value={entityInfo.apikey}
+                            onChange={handleInputChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            className={classes.input}
+                            label='Route of Service = "http://orion:1026"'
+                            name="cbroker"
+                            value={entityInfo.cbroker}
+                            onChange={handleInputChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            className={classes.input}
+                            label='Resource of Service = "/iot/json"'
+                            name="resource"
+                            value={entityInfo.resource}
+                            onChange={handleInputChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleCreateEntity}
+                        >
+                            Create Service
+                        </Button>
+                    </Grid>
+                </Grid>
             </form>
 
             {response && (
@@ -146,7 +162,7 @@ const CreateService = () => {
                     <Typography>{response}</Typography>
                 </Paper>
             )}
-        </div>
+        </Container>
     );
 };
 

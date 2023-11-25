@@ -1,13 +1,13 @@
 // src/components/CreateCamposEntity.js
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, makeStyles, Paper, Typography, Select, MenuItem, InputLabel, FormControl } from '@material-ui/core';
+import { TextField, Button, makeStyles, Paper, Typography, Select, MenuItem, InputLabel, FormControl, Container, Grid } from '@material-ui/core';
 import fiwareService from '../../services/fiwareService';
 
 const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
-    maxWidth: '300px',
+    maxWidth: '600px',
     margin: 'auto',
   },
   input: {
@@ -41,8 +41,8 @@ const CreateAndarEntity = () => {
       type: 'Text',
     },
     maxCapacity: {
-        value: 0,
-        type: 'Integer'
+      value: 0,
+      type: 'Integer'
     },
     refAndar: {
       type: 'Relationship',
@@ -63,42 +63,42 @@ const CreateAndarEntity = () => {
         console.log(response)
         setCampusList(response);
       } catch (error) {
-        console.error('Error al obtener la lista de campus:', error);
-        setError('Error al obtener la lista de entidades campus');
+        console.error('Error when obtaining the campus list!:', error);
+        setError('Error when obtaining the campus list!');
       }
     };
 
     fetchCampusEntities();
   }, []);
-   
+
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setEntityInfo((prevEntityInfo) => {
-        const updatedEntityInfo = { ...prevEntityInfo };
-    
-        if (name === 'id') {
-          updatedEntityInfo.id = value;
-        } else {
-          // Handle nested properties
-          const keys = name.split('.');
-          let currentLevel = updatedEntityInfo;
-    
-          for (let i = 0; i < keys.length - 1; i++) {
-            currentLevel = currentLevel[keys[i]];
-          }
-    
-          // Handle array property
-          if (keys[keys.length - 1] === 'value' && !isNaN(value)) {
-            // Convert to integer if it's a numeric value
-            currentLevel[keys[keys.length - 1]] = parseInt(value, 10);
-          } else {
-            currentLevel[keys[keys.length - 1]] = value;
-          }
+      const updatedEntityInfo = { ...prevEntityInfo };
+
+      if (name === 'id') {
+        updatedEntityInfo.id = value;
+      } else {
+        // Handle nested properties
+        const keys = name.split('.');
+        let currentLevel = updatedEntityInfo;
+
+        for (let i = 0; i < keys.length - 1; i++) {
+          currentLevel = currentLevel[keys[i]];
         }
-    
-        return updatedEntityInfo;
-      });
+
+        // Handle array property
+        if (keys[keys.length - 1] === 'value' && !isNaN(value)) {
+          // Convert to integer if it's a numeric value
+          currentLevel[keys[keys.length - 1]] = parseInt(value, 10);
+        } else {
+          currentLevel[keys[keys.length - 1]] = value;
+        }
+      }
+
+      return updatedEntityInfo;
+    });
   };
 
   const handleCreateEntity = async () => {
@@ -111,64 +111,87 @@ const CreateAndarEntity = () => {
       if (campusInfo[0] && campusInfo[0].id) {
         const fiwareResponse = await fiwareService.registerEntityFiware(entityInfo);
         //const fiwareResponse = await fiwareService.getTest(entityInfo);
-        console.log('Entidad creada en FIWARE:', fiwareResponse);
-        setResponse('Entidad creada con éxito en FIWARE');
+        console.log('Successfully created Floor!', fiwareResponse);
+        setResponse('Successfully created Floor!');
         setSuccess(true);
       } else {
-        setResponse('El Campus seleccionada no existe');
+        setResponse('The selected campus does not exist!');
         setSuccess(false);
       }
     } catch (error) {
-      console.error('Error al crear la entidad Andar:', error);
-      setResponse('Error al crear la entidad Andar');
+      console.error('Error creating the Floor:', error);
+      setResponse('Error creating the Floor!');
       setSuccess(false);
     }
   };
 
   return (
-    <div className={classes.container}>
-      <h2>Create New Andar Entity in FIWARE</h2>
+    <Container className={classes.container} style={{ marginTop: '20px' }}>
+
+      <Typography variant="h3" style={{ marginBottom: '16px' }}>
+        Create New Floor
+      </Typography>
       <form>
-        <TextField
-          className={classes.input}
-          label="ID of the Entity"
-          name="id"
-          value={entityInfo.id}
-          onChange={handleInputChange}
-        />
-        <TextField
-          className={classes.input}
-          label="Name"
-          name="name.value"
-          value={entityInfo.name.value}
-          onChange={handleInputChange}
-        />
-        <TextField
-          className={classes.input}
-          label="Max Capacity"
-          name="maxCapacity.value"
-          type="number"
-          value={entityInfo.maxCapacity.value}
-          onChange={handleInputChange}
-        />
-        <FormControl className={classes.formControl}>
-          <InputLabel>Campus</InputLabel>
-          <Select
-            name="refAndar.value"
-            value={entityInfo.refAndar.value}
-            onChange={handleInputChange}
-          >
-            {/* Obtener la lista de universidades desde FIWARE y mostrarlas como opciones */}
-            {campusList.map((campus) => (
-              <MenuItem key={campus.id} value={campus.id}>
-                {campus.name.value}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <Button variant="contained" color="primary" onClick={handleCreateEntity}>
-          Create Andar Entity
-        </Button>
+        <Grid container spacing={4}>
+          <Grid item xs={12}>
+            <TextField
+            fullWidth
+              className={classes.input}
+              label='ID = "urn:ngsi-ld:Andar:001"'
+              name="id"
+              value={entityInfo.id}
+              onChange={handleInputChange}
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <TextField
+            fullWidth
+              className={classes.input}
+              label="Name"
+              name="name.value"
+              value={entityInfo.name.value}
+              onChange={handleInputChange}
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <TextField
+            fullWidth
+              className={classes.input}
+              label="Max Capacity"
+              name="maxCapacity.value"
+              type="number"
+              value={entityInfo.maxCapacity.value}
+              onChange={handleInputChange}
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <FormControl className={classes.formControl}>
+              <InputLabel>Campus</InputLabel>
+              <Select
+                name="refAndar.value"
+                value={entityInfo.refAndar.value}
+                onChange={handleInputChange}
+              >
+                {/* Obtener la lista de universidades desde FIWARE y mostrarlas como opciones */}
+                {campusList.map((campus) => (
+                  <MenuItem key={campus.id} value={campus.id}>
+                    {campus.name.value}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Button variant="contained" color="primary" onClick={handleCreateEntity}>
+              Create Floor
+            </Button>
+          </Grid>
+
+        </Grid>
       </form>
 
       {response && (
@@ -176,7 +199,7 @@ const CreateAndarEntity = () => {
           <Typography>{response}</Typography>
         </Paper>
       )}
-    </div>
+    </Container>
   );
 };
 

@@ -3,6 +3,45 @@ import { Link as RouterLink } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Button, Menu, MenuItem } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
+import { withStyles } from '@material-ui/core/styles';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import SchoolIcon from '@material-ui/icons/School';
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+import ApartmentIcon from '@material-ui/icons/Apartment';
+import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
+
+const StyledMenu = withStyles({
+  paper: {
+    border: '1px solid #d3d4d5',
+  },
+})((props) => (
+  <Menu
+    elevation={0}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: 'bottom',
+      horizontal: 'center',
+    }}
+    transformOrigin={{
+      vertical: 'top',
+      horizontal: 'center',
+    }}
+    {...props}
+  />
+));
+
+const StyledMenuItem = withStyles((theme) => ({
+  root: {
+    '&:focus': {
+      backgroundColor: theme.palette.primary.main,
+      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+        color: theme.palette.common.white,
+      },
+    },
+  },
+}))(MenuItem);
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -18,14 +57,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const MyMenu = () => {
-  const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleMenuOpen = (event) => {
+  const classes = useStyles();
+  const [anchorEl, setAnchorEl] = React.useState(null);  
+
+  const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMenuClose = () => {
+  const handleClose = () => {
     setAnchorEl(null);
   };
 
@@ -34,53 +74,65 @@ const MyMenu = () => {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            My FIWARE App
+            <b>Smart Classroom Frontend</b>
           </Typography>
+
           <Button color="inherit" component={RouterLink} to="/" className={classes.link}>
             Inicio
           </Button>
-          <Button color="inherit" component={RouterLink} to="/register" className={classes.link}>
-            Register
-          </Button>
-          <Button color="inherit" component={RouterLink} to="/devices/listdevices" className={classes.link}>
-            Devices
-          </Button>
-          <Button color="inherit" component={RouterLink} to="/services" className={classes.link}>
-            Services
-          </Button>
+
           <Button
             color="inherit"
             aria-controls="entities-menu"
             aria-haspopup="true"
-            onClick={handleMenuOpen}
             className={classes.link}
+            onClick={handleClick}
           >
             Entities
           </Button>
-          <Menu
-            id="entities-menu"
+          <StyledMenu
+            id="customized-menu"
             anchorEl={anchorEl}
             keepMounted
             open={Boolean(anchorEl)}
-            onClose={handleMenuClose}
+            onClose={handleClose}
           >
-            <MenuItem component={RouterLink} to="/entities/room" onClick={handleMenuClose}>
-              Room
-            </MenuItem>
-            <MenuItem component={RouterLink} to="/entities/university" onClick={handleMenuClose}>
-              University
-            </MenuItem>
-            <MenuItem component={RouterLink} to="/entities/campus" onClick={handleMenuClose}>
-              Campus
-            </MenuItem>
-            <MenuItem component={RouterLink} to="/entities/andares" onClick={handleMenuClose}>
-              Andares
-            </MenuItem>
-            <MenuItem component={RouterLink} to="/entities/salas" onClick={handleMenuClose}>
-              Salas
-            </MenuItem>
-            {/* Agrega otros submenús según tus necesidades */}
-          </Menu>
+            <StyledMenuItem component={RouterLink} to="/entities/university" onClick={handleClose}>
+              <ListItemIcon>
+                <SchoolIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="University" />
+            </StyledMenuItem>
+
+            <StyledMenuItem component={RouterLink} to="/entities/campus" onClick={handleClose}>              
+              <ListItemIcon>
+                <AccountBalanceIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Campus" />
+            </StyledMenuItem>
+
+            <StyledMenuItem component={RouterLink} to="/entities/andares" onClick={handleClose}>
+              <ListItemIcon>
+                <ApartmentIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Floors" />
+            </StyledMenuItem>
+
+            <StyledMenuItem component={RouterLink} to="/entities/salas" onClick={handleClose}>
+              <ListItemIcon>
+                <MeetingRoomIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Classroom" />
+            </StyledMenuItem>
+          </StyledMenu>
+
+          <Button color="inherit" component={RouterLink} to="/services" className={classes.link}>
+            Services
+          </Button>
+          <Button color="inherit" component={RouterLink} to="/devices/listdevices" className={classes.link}>
+            Devices
+          </Button>
+
         </Toolbar>
       </AppBar>
     </div>

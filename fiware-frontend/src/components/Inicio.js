@@ -1,13 +1,13 @@
 // src/components/Register.js
 import React, { useState } from 'react';
-import { TextField, Button, makeStyles, Paper, Typography } from '@material-ui/core';
+import { TextField, Button, makeStyles, Paper, Typography, Container, Grid } from '@material-ui/core';
 import fiwareService from '../services/fiwareService';
 
 const useStyles = makeStyles((theme) => ({
     container: {
         display: 'flex',
         flexDirection: 'column',
-        maxWidth: '300px', // Ajusta el ancho máximo según tus preferencias
+        maxWidth: '600px', // Ajusta el ancho máximo según tus preferencias
         margin: 'auto', // Centra el formulario en la pantalla
     },
     input: {
@@ -43,34 +43,42 @@ const Inicio = () => {
         try {
             // Registra el dispositivo en FIWARE
             const fiwareResponse = await fiwareService.getStatusOrion();
-            setResponse('FIWARE response:', fiwareResponse);
+            //setResponse('Connection established:', fiwareResponse);
+            setResponse('Connection established');
             setSuccess(true)
             // Muestra un mensaje de éxito
             console.log('FIWARE response:', fiwareResponse);
         } catch (error) {
             // Maneja los errores
-            console.error('Error in the response:', error);
-            setResponse('Error in the Conecction');
+            //console.error('Connection failed"', error);
+            console.error('Connection failed....', error);
+            setResponse('Connection failed...');
             setSuccess(false)
         }
     };
 
     return (
-        <div className={classes.container}>
-            <h2>Registro de Dispositivo</h2>
-            <form>               
-                {/* Agrega otros campos del formulario según tus necesidades */}
+        <Container className={classes.container} style={{ marginTop: '20px' }}>
+            
+            <Typography variant="h3" style={{ marginBottom: '16px' }}>
+            Smart Classroom
+            </Typography>
+
+            <p> <a href="https://github.com/fventuraq/Smart-Classroom-IoT" target="_blank">GitHub Repository</a></p>
+                         
+            <Grid item xs={12}>
                 <Button variant="contained" color="primary" onClick={handleRegisterDevice}>
-                    Verificar conexion
+                    Connection test
                 </Button>
-            </form>
+                </Grid>
+            
 
             {response && (
                 <Paper className={success ? classes.success : classes.error}>
                     <Typography>{response}</Typography>
                 </Paper>
             )}
-        </div>
+        </Container>
     );
 };
 

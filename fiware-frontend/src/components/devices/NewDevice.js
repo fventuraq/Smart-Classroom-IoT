@@ -1,6 +1,6 @@
 // src/components/CreateCamposEntity.js
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, makeStyles, Paper, Typography, Select, MenuItem, InputLabel, FormControl } from '@material-ui/core';
+import { TextField, Button, makeStyles, Paper, Typography, Select, MenuItem, InputLabel, FormControl, Container, Grid } from '@material-ui/core';
 import fiwareService from '../../services/fiwareService';
 import iotAgentService from '../../services/iotAgentService';
 
@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
     container: {
         display: 'flex',
         flexDirection: 'column',
-        maxWidth: '300px',
+        maxWidth: '600px',
         margin: 'auto',
     },
     input: {
@@ -101,7 +101,7 @@ const CreateDeviceEntity = () => {
         const { name, value } = event.target;
         setEntityInfo((prevEntityInfo) => {
             const updatedEntityInfo = { ...prevEntityInfo };
-    
+
             if (name === 'device_id' || name === 'entity_name' || name === 'transport' || name === 'endpoint') {
                 updatedEntityInfo[name] = value;
             } else if (name === 'static_attributes[0].value') {
@@ -111,7 +111,7 @@ const CreateDeviceEntity = () => {
                 // Handle nested properties
                 const keys = name.split('.');
                 let currentLevel = updatedEntityInfo;
-    
+
                 for (let i = 0; i < keys.length - 1; i++) {
                     if (!currentLevel[keys[i]]) {
                         // Si la propiedad actual no existe, inicialízala como un objeto vacío
@@ -119,7 +119,7 @@ const CreateDeviceEntity = () => {
                     }
                     currentLevel = currentLevel[keys[i]];
                 }
-    
+
                 // Handle array property
                 if (keys[keys.length - 1] === 'value') {
                     // Obtén el id correcto del evento
@@ -130,7 +130,7 @@ const CreateDeviceEntity = () => {
                     currentLevel[keys[keys.length - 1]] = value;
                 }
             }
-    
+
             return updatedEntityInfo;
         });
     };
@@ -175,57 +175,86 @@ const CreateDeviceEntity = () => {
     };
 
     return (
-        <div className={classes.container}>
-            <h2>Create New Device</h2>
+        <Container className={classes.container} style={{ marginTop: '20px' }}>
+            <Typography variant="h3" style={{ marginBottom: '16px' }}>
+                Create New Device
+            </Typography>
             <form>
-                <TextField
-                    className={classes.input}
-                    label="Device ID"
-                    name="device_id"
-                    value={entityInfo.device_id}
-                    onChange={handleInputChange}
-                />
-                <TextField
-                    className={classes.input}
-                    label="Entity Name"
-                    name="entity_name"
-                    value={entityInfo.entity_name}
-                    onChange={handleInputChange}
-                />
-                <TextField
-                    className={classes.input}
-                    label="Transport"
-                    name="transport"
-                    value={entityInfo.transport}
-                    onChange={handleInputChange}
-                />
-                <TextField
-                    className={classes.input}
-                    label="Endpoint"
-                    name="endpoint"
-                    value={entityInfo.endpoint}
-                    onChange={handleInputChange}
-                />
-                <FormControl className={classes.formControl}>
-                    <InputLabel>Sala</InputLabel>
-                    <Select
-                        name="static_attributes[0].value"
-                        value={entityInfo.static_attributes[0].value}
-                        onChange={handleInputChange}
-                    >
-                        {/* Obtener la lista de universidades desde FIWARE y mostrarlas como opciones */}
-                        <MenuItem value="">Selecciona una Sala</MenuItem>
-                        {salaList.map((sala) => (
-                            <MenuItem key={sala.id} value={sala.id}>
-                                {sala.name.value}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+                <Grid container spacing={4}>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            className={classes.input}
+                            label='Device ID = "device001"'
+                            name="device_id"
+                            value={entityInfo.device_id}
+                            onChange={handleInputChange}
+                        />
+                    </Grid>
 
-                <Button variant="contained" color="primary" onClick={handleCreateEntity}>
-                    Create Device
-                </Button>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            className={classes.input}
+                            label='Entity Name = "urn:ngsi-ld:Device:001"'
+                            name="entity_name"
+                            value={entityInfo.entity_name}
+                            onChange={handleInputChange}
+                        />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel>Transport</InputLabel>
+                            <Select
+                                name="transport"
+                                value={entityInfo.transport}
+                                onChange={handleInputChange}
+                            >
+                                <MenuItem value="">Select Transport</MenuItem>
+                                <MenuItem value='HTTP'>HTTP</MenuItem>
+                                <MenuItem value='MQTT'>MQTT</MenuItem>
+
+                            </Select>
+                        </FormControl>
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            className={classes.input}
+                            label='Endpoint = "http://dummy-device:80/dht22"'
+                            name="endpoint"
+                            value={entityInfo.endpoint}
+                            onChange={handleInputChange}
+                        />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel>Classroom</InputLabel>
+                            <Select
+                                name="static_attributes[0].value"
+                                value={entityInfo.static_attributes[0].value}
+                                onChange={handleInputChange}
+                            >
+                                {/* Obtener la lista de universidades desde FIWARE y mostrarlas como opciones */}
+                                <MenuItem value="">Select Classroom</MenuItem>
+                                {salaList.map((sala) => (
+                                    <MenuItem key={sala.id} value={sala.id}>
+                                        {sala.name.value}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <Button variant="contained" color="primary" onClick={handleCreateEntity}>
+                            Create Device
+                        </Button>
+                    </Grid>
+                </Grid>
             </form>
 
             {response && (
@@ -233,7 +262,7 @@ const CreateDeviceEntity = () => {
                     <Typography>{response}</Typography>
                 </Paper>
             )}
-        </div>
+        </Container>
     );
 };
 

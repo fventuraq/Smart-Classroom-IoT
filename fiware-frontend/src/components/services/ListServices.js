@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { TextField, Button, makeStyles, Paper, Typography, Select, MenuItem, InputLabel, FormControl } from '@material-ui/core';
+import { Button, makeStyles, Typography, Container, Grid, Paper } from '@material-ui/core';
 import iotAgentService from '../../services/iotAgentService';
 
 const useStyles = makeStyles((theme) => ({
     container: {
         display: 'flex',
         flexDirection: 'column',
-        maxWidth: '300px',
+        maxWidth: '650px',
         margin: 'auto',
     },
     input: {
@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ServiceList = () => {
+    const classes = useStyles();
     const [services, setServices] = useState([]);
     const [error, setError] = useState(null);
 
@@ -39,12 +40,12 @@ const ServiceList = () => {
         const fetchServices = async () => {
             try {
                 // Obtener la lista de servicios desde FIWARE IoT Agent JSON
-                const serviceList = await iotAgentService.getServices( 'openiot', '/');
+                const serviceList = await iotAgentService.getServices('openiot', '/');
                 console.log('LIST OF SERVICES', serviceList)
                 setServices(serviceList);
             } catch (error) {
-                console.error('Error al obtener la lista de servicios:', error);
-                setError('Error al obtener la lista de servicios');
+                console.error('Error getting list of services:', error);
+                setError('Error getting list of services!');
             }
         };
 
@@ -52,24 +53,39 @@ const ServiceList = () => {
     }, []);
 
     return (
-        <div>
-            <h2>Lista de Servicios en FIWARE IoT Agent JSON</h2>
+        <Container className={classes.container} style={{ marginTop: '20px' }}>
+            <Typography variant="h3" style={{ marginBottom: '16px' }}>
+                List of Services (IoT Agent)
+            </Typography>
 
-            {error && <p>Error: {error}</p>}
+            {//error && <p>Error: {error}</p>
+            }
 
             <ul>
                 {services?.map((service) => (
                     <li key={service?.apikey}>
-                        <strong>API Key:</strong> {service?.apikey}, <strong>Ruta:</strong> {service?.resource} <br/>
+                        <strong>API Key:</strong> {service?.apikey}, <strong>Ruta:</strong> {service?.resource} <br />
                         <strong>C-BROKER</strong> {service?.cbroker}
                     </li>
                 ))}
             </ul>
+            <Grid item xs={12}>
+                <Button
+                    variant="contained"
+                    component={RouterLink}
+                    to="/services/newservice">
+                    Create Service
+                </Button>
+            </Grid>
 
-            <Button variant="contained" component={RouterLink} to="/services/newservice">
-                Create Service
-            </Button>
-        </div>
+            {error && (
+                <Paper className={classes.error}>
+                    <Typography>{error}</Typography>
+                </Paper>
+            )}
+
+
+        </Container>
     );
 };
 
