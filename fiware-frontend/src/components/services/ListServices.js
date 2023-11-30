@@ -64,8 +64,7 @@ const ServiceList = () => {
             <ul>
                 {services?.map((service) => (
                     <li key={service?.apikey}>
-                        <strong>API Key:</strong> {service?.apikey}, <strong>Ruta:</strong> {service?.resource} <br />
-                        <strong>C-BROKER</strong> {service?.cbroker}
+                        <strong>API Key:</strong> {service?.apikey}, <strong>Ruta:</strong> {service?.resource} <br/>                        
                     </li>
                 ))}
             </ul>

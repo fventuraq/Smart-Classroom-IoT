@@ -38,7 +38,7 @@ const ListCampus = () => {
     const fetchUniversityEntities = async () => {
       try {
         // Obtener la lista de entidades universitarias desde FIWARE
-        const response = await fiwareService.getEntitiesByType('Universidade');
+        const response = await fiwareService.getEntitiesByType('Campos');
         console.log(response)
         setUniversityEntities(response);
       } catch (error) {

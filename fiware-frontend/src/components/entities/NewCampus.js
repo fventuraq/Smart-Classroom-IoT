@@ -107,7 +107,7 @@ const CreateCampusEntity = () => {
         const fiwareResponse = await fiwareService.registerEntityFiware(entityInfo);
         //const fiwareResponse = await fiwareService.getTest(entityInfo);
         console.log('Successfully created campus!:', fiwareResponse);
-        setResponse('Successfully created campus!');
+        setResponse('Successfully created campus!', error);
         setSuccess(true);
       } else {
         setResponse('The selected university does not exist!');

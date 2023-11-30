@@ -148,7 +148,7 @@ const CreateDeviceEntity = () => {
                     devices: [
                         {
                             device_id: entityInfo.device_id,
-                            entity_name: entityInfo.entity_name,
+                            entity_name: 'urn:ngsi-ld:' + entityInfo.device_id,
                             entity_type: entityInfo.entity_type,
                             transport: entityInfo.transport,
                             endpoint: entityInfo.endpoint,
@@ -192,6 +192,8 @@ const CreateDeviceEntity = () => {
                         />
                     </Grid>
 
+                    {/*
+
                     <Grid item xs={12}>
                         <TextField
                             fullWidth
@@ -202,6 +204,7 @@ const CreateDeviceEntity = () => {
                             onChange={handleInputChange}
                         />
                     </Grid>
+    */}
 
                     <Grid item xs={12}>
                         <FormControl className={classes.formControl}>

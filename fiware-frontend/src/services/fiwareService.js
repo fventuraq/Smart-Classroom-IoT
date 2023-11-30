@@ -49,6 +49,7 @@ const fiwareService = {
     },
 
     registerEntityFiware: async (entityInfo) => {
+        console.log('campus send...', entityInfo)
         const BASE_URL_ENTITY = `${BASE_URL}/v2/entities`
         try {
             const response = await axios.post(BASE_URL_ENTITY, entityInfo);
@@ -85,7 +86,6 @@ const fiwareService = {
         }
     },
     getDeviceById: async (iddevice, fiwareService, fiwareServicePath) => {
-        //http://localhost:1026/v2/entities/urn:ngsi-ld:Device:001?type=Device&options=keyValues
         const BASE_URL_GET_ENTITIES = `${BASE_URL}/v2/entities/${iddevice}?type=Device&options=keyValues`;
         const headers = {
             'Content-Type': 'application/json',
@@ -179,10 +179,10 @@ const fiwareService = {
             'fiware-service': fiwareService,
             'fiware-servicepath': fiwareServicePath,
         };
-    
+
         const BASE_URL_UPDATE_DEVICE = `${BASE_URL}/v2/entities/${deviceid}/attrs?type=Device`;
         console.log('mi ruta', BASE_URL_UPDATE_DEVICE);
-        
+
         try {
             const response = await axios.patch(BASE_URL_UPDATE_DEVICE, data, { headers });
             return response;
@@ -190,8 +190,8 @@ const fiwareService = {
             console.error('Error al actualizar la entidad en FIWARE:', error.message);
             throw error;
         }
-    },   
-    
+    },
+
     getTest: async (dato) => {
         console.log("entre al test", dato)
         return { hola: 'hola' }

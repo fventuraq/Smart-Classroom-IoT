@@ -140,7 +140,7 @@ const CreateSalaEntity = () => {
             <TextField
               fullWidth
               className={classes.input}
-              label="ID of the Entity"
+              label='ID of the Entity = "urn:ngsi-ld:Sala:101"'
               name="id"
               value={entityInfo.id}
               onChange={handleInputChange}
@@ -151,7 +151,7 @@ const CreateSalaEntity = () => {
             <TextField
               fullWidth
               className={classes.input}
-              label="Name"
+              label='Name = "Sala 101"'
               name="name.value"
               value={entityInfo.name.value}
               onChange={handleInputChange}

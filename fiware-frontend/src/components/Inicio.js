@@ -37,7 +37,7 @@ const Inicio = () => {
     });
 
     const [response, setResponse] = useState(null);
-    const [success, setSuccess] = useState(false);    
+    const [success, setSuccess] = useState(false);
 
     const handleRegisterDevice = async () => {
         try {
@@ -59,19 +59,19 @@ const Inicio = () => {
 
     return (
         <Container className={classes.container} style={{ marginTop: '20px' }}>
-            
+
             <Typography variant="h3" style={{ marginBottom: '16px' }}>
-            Smart Classroom
+                Smart Classroom
             </Typography>
 
             <p> <a href="https://github.com/fventuraq/Smart-Classroom-IoT" target="_blank">GitHub Repository</a></p>
-                         
+
             <Grid item xs={12}>
                 <Button variant="contained" color="primary" onClick={handleRegisterDevice}>
                     Connection test
                 </Button>
-                </Grid>
-            
+            </Grid>
+
 
             {response && (
                 <Paper className={success ? classes.success : classes.error}>
