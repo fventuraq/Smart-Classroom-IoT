@@ -40,7 +40,8 @@ const CreateDeviceEntity = () => {
         entity_type: 'Device',
         transport: '',
         endpoint: '',
-        attributes: [
+        deviceType: '',
+        /*attributes: [
             {
                 object_id: 'temperature',
                 name: 'temperature',
@@ -65,7 +66,7 @@ const CreateDeviceEntity = () => {
                 name: 'interval',
                 type: 'command',
             },
-        ],
+        ],*/
         static_attributes: [
             {
                 name: 'refSala',
@@ -136,6 +137,7 @@ const CreateDeviceEntity = () => {
     };
 
     const handleCreateEntity = async () => {
+        let iotAgentResponse;
         try {
             // Obtener la información de la sala seleccionada desde FIWARE
             console.log('La sala seleccionada es ', entityInfo.static_attributes[0])
@@ -144,6 +146,55 @@ const CreateDeviceEntity = () => {
 
             // Verificar que la universidad existe
             if (salaInfo[0] && salaInfo[0].id) {
+
+                if(entityInfo.deviceType === 'dht22'){
+                    entityInfo.attributes = [
+                        {
+                            object_id: 'temperature',
+                            name: 'temperature',
+                            type: 'Number',
+                        },
+                        {
+                            object_id: 'humidity',
+                            name: 'relativeHumidity',
+                            type: 'Number',
+                        },
+                    ]
+
+                    entityInfo.commands = [
+                        {
+                            "name": "start",
+                            "type": "command"
+                        },
+                        {
+                            "name": "stop",
+                            "type": "command"
+                        },{
+                            "name": "interval",
+                            "type": "command"
+                        }
+                    ]
+
+                } else if (entityInfo.deviceType === 'rfid') {
+                    entityInfo.attributes = [
+                        {
+                            object_id: "rfid",
+                            name: "rfid",
+                            type: "Bolean"
+                        }
+                    ]
+
+                    entityInfo.commands = [
+                        {
+                            "name": "activate",
+                            "type": "command"
+                        },
+                        {
+                            "name": "disable",
+                            "type": "command"
+                        }
+                    ]
+                }
                 const deviceData = {
                     devices: [
                         {
@@ -158,18 +209,45 @@ const CreateDeviceEntity = () => {
                         },
                     ],
                 };
-                const iotAgentResponse = await iotAgentService.registerDevice(deviceData, 'openiot', '/');
-                //const iotAgentResponse = await iotAgentService.getTest(deviceData)
-                console.log('Entidad creada con IoT Agent:', iotAgentResponse);
-                setResponse('Entidad creada con éxito en IoT Agent:');
-                setSuccess(true);
+                //const iotAgentResponse = await iotAgentService.getTest(deviceData);                
+                iotAgentResponse = await iotAgentService.registerDevice(deviceData, 'openiot', '/').then(async (response) => {
+                    let key = '4jggokgpepnvsb2uv4s40d59ov'
+                    setResponse('Device created and successfully tested in IoT Agent!!!');
+                    setSuccess(true);
+                    console.log('Device created successfully in IoT Agent: ', iotAgentResponse);
+                    if (response && entityInfo.deviceType === 'dht22') {
+                        let tempdata = {
+                            temperature: 1,
+                            humidity: 1
+                        }
+
+                        await iotAgentService.sendDataAgent(tempdata, key, entityInfo.device_id, 'openiot', '/').then(res1 => {
+                            console.log('respuesta2', res1)
+                            setResponse('Device created and successfully tested in IoT Agent!!!');
+                            setSuccess(true);
+                        }).catch(err => {
+                            console.error('ERROR EN LA CONEXION', error);
+                        })                   
+                    } else if ( response && entityInfo.deviceType === 'rfid'){
+                        let tempdata = {
+                            rfid: false
+                        }
+                        await iotAgentService.sendDataAgent(tempdata, key, entityInfo.device_id, 'openiot', '/').then(res2 => {
+                            console.log('respuesta2', res2)
+                            setResponse('Device created and successfully tested in IoT Agent!!!');
+                            setSuccess(true);
+                        }).catch(err => {
+                            console.error('CONECTION ERROR', error)
+                        })
+                    }
+                });
             } else {
-                setResponse('La sala seleccionada no existe');
+                setResponse('The selected classroom does not exist!!!');
                 setSuccess(false);
             }
         } catch (error) {
-            console.error('Error al crear el DEVICE:', error);
-            setResponse('Error al crear el DEVICE');
+            console.error('Error creating the DEVICE:', error);
+            setResponse('Error creating the DEVICE');
             setSuccess(false);
         }
     };
@@ -191,21 +269,6 @@ const CreateDeviceEntity = () => {
                             onChange={handleInputChange}
                         />
                     </Grid>
-
-                    {/*
-
-                    <Grid item xs={12}>
-                        <TextField
-                            fullWidth
-                            className={classes.input}
-                            label='Entity Name = "urn:ngsi-ld:Device:001"'
-                            name="entity_name"
-                            value={entityInfo.entity_name}
-                            onChange={handleInputChange}
-                        />
-                    </Grid>
-    */}
-
                     <Grid item xs={12}>
                         <FormControl className={classes.formControl}>
                             <InputLabel>Transport</InputLabel>
@@ -217,6 +280,22 @@ const CreateDeviceEntity = () => {
                                 <MenuItem value="">Select Transport</MenuItem>
                                 <MenuItem value='HTTP'>HTTP</MenuItem>
                                 <MenuItem value='MQTT'>MQTT</MenuItem>
+
+                            </Select>
+                        </FormControl>
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <FormControl className={classes.formControl}>
+                            <InputLabel>Device Type</InputLabel>
+                            <Select
+                                name="deviceType"
+                                value={entityInfo.deviceType}
+                                onChange={handleInputChange}
+                            >
+                                <MenuItem value="">Select Type</MenuItem>
+                                <MenuItem value='dht22'>DHT22</MenuItem>
+                                <MenuItem value='rfid'>RFID</MenuItem>
 
                             </Select>
                         </FormControl>

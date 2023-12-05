@@ -61,7 +61,7 @@ const ListSalas = () => {
             <li key={sala.id}>
               <Typography variant="body1">
                 {sala.name.value} -{' '}
-                <RouterLink to={`/entities/sala/${sala.id}`}>View Sala</RouterLink>
+                <RouterLink to={`/entities/salas/${sala.id}`}>View Sala</RouterLink>
               </Typography>
             </li>
           ))}

@@ -163,28 +163,10 @@ const DetailDevice = () => {
                 };
             });
         });
-
-        // Retornar una función para desconectar el socket cuando sea necesario
         return () => {
             socket.disconnect();
         };
     }, []);
-
-    /*const sendDataAgent = async () => {                
-
-        let data = {
-            temperature: 50,
-            humidity: 10
-        }
-
-        try {
-            
-            const response = await iotAgentService.sendDataAgent(data, key, iddevice, 'openiot', '/');
-            //console.log(response)
-        } catch (error) {
-            console.error('ERROR EN LA CONEXION', error)
-        }
-    };*/
 
     const startDevice = async () => {
         let dataStart = {

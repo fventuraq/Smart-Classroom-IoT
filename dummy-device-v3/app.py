@@ -26,12 +26,12 @@ def rfid():
         if "activate" in data:
             if RFID_ACTIVATED.value == False:
                 RFID_ACTIVATED.value = True
-                return make_response(json.dumps({'activate': 'RFID activated', 'rfid': True}), 200)
+                return make_response(json.dumps({'activate': 'RFID activated'}), 200)
         
         elif "disable" in data:
             SEND.value = False
             RFID_ACTIVATED.value = False
-            return make_response(json.dumps({'disable': 'RFID deactivated', 'rfid': False}), 200)
+            return make_response(json.dumps({'disable': 'RFID deactivated'}), 200)
 
 @app.route("/dht22", methods=['GET', 'POST'])
 def dht22():

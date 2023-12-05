@@ -132,7 +132,7 @@ const fiwareService = {
         }
     },
     getSalaById: async (salaId) => {
-        const BASE_URL_GET_ENTITIES = `${BASE_URL}/v2/entities?type=Andar&refAndar=${salaId}`
+        const BASE_URL_GET_ENTITIES = `${BASE_URL}/v2/entities?type=Sala&id=${salaId}`
         try {
             const response = await axios.get(BASE_URL_GET_ENTITIES, { crossdomain: true });
             return response.data
@@ -152,25 +152,6 @@ const fiwareService = {
             throw error;
         }
     },
-    /*startDevice: async (data, deviceid, fiwareService, fiwareServicePath) => {
-        console.log('mi data', data)
-        console.log('mi device id', deviceid, fiwareService, fiwareServicePath)
-        const headers = {
-            'Content-Type': 'application/json',
-            'fiware-service': fiwareService,
-            'fiware-servicepath': fiwareServicePath,
-        };
-
-        const BASE_URL_GET_STAR_DEVICE= `${BASE_URL}/v2/entities/${deviceid}/attrs?type=Device`
-        console.log('mi ruta', BASE_URL_GET_STAR_DEVICE)
-        try {
-            const response = await axios.patch(BASE_URL_GET_STAR_DEVICE, data, { headers });
-            return response;
-        } catch (error) {
-            console.error('Error al crear la entidad en FIWARE:', error.message);
-            throw error;
-        }
-    },*/
     startDevice: async (data, deviceid, fiwareService, fiwareServicePath) => {
         console.log('mi data', data)
         console.log('mi device id', deviceid, fiwareService, fiwareServicePath)

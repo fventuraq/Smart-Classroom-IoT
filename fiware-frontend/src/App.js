@@ -14,6 +14,7 @@ import CreateAndarEntity from './components/entities/NewAndar';
 import ListAndares from './components/entities/ListAndares';
 import CreateSalaEntity from './components/entities/NewSala';
 import ListSalas from './components/entities/ListSalas';
+import DetailSala from './components/entities/DetailSala';
 import ListCampusUniversity from './components/entities/ListCampusUniversity';
 
 import ListDevices from './components/devices/ListDevices';
@@ -21,6 +22,7 @@ import CreateDeviceEntity from './components/devices/NewDevice';
 import DetailDevice from './components/devices/DetailDevice';
 import ServiceList from './components/services/ListServices';
 import CreateService from './components/services/NewService';
+import CreateSubscription from './components/subscriptions/NewSubscription';
 import MyMenu from './components/MyMenu'; // Agrega esta línea para importar el componente Menu
 
 const App = () => {
@@ -47,9 +49,11 @@ const App = () => {
           <Route path="/entities/andares" element={<ListAndares />} />
           <Route path="/entities/newandar" element={<CreateAndarEntity />} />
           <Route path="/entities/salas" element={<ListSalas />} />
+          <Route path="/entities/salas/:idsala" element={<DetailSala />} />
           <Route path="/entities/newsala" element={<CreateSalaEntity />} />
           <Route path="/entities/campus/:iduniversity" element={<ListCampusUniversity />} />
           <Route path="/entities/room" element={<ListEntities />} />
+          <Route path="/subscriptions/newsubscription" element={<CreateSubscription />} />
         </Routes>
       </div>
     </Router>

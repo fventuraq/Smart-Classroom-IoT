@@ -63,6 +63,22 @@ const Inicio = () => {
             <Typography variant="h3" style={{ marginBottom: '16px' }}>
                 Smart Classroom
             </Typography>
+            <p>
+                É uma aplicação web no domínio do Smart Building, cujo objetivo é melhorar a experiência de ensino e aprendizagem, por meio de ações autônomas de acionamento e desligamento dos dispositivos que compõem a infraestrutura das classes, além do monitoramento das suas condições como temperatura e umidade.
+            </p>
+
+            <p>
+                Esta aplicação fornece:
+            </p>
+
+            <ol>
+                <li>
+                    A criação das diferentes entidades, representando todos os componentes da infraestrutura que compõem o ambiente universitário desde: universidades, campus, andares, salas e os seus dispositivos (ar-condicionado, projetor, ...).
+                </li>
+                <li>
+                    Dashboard contendo o monitoramento das condições da sala de aula (temperatura, umidade).
+                </li>
+            </ol>
 
             <p> <a href="https://github.com/fventuraq/Smart-Classroom-IoT" target="_blank">GitHub Repository</a></p>
 

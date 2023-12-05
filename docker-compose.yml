@@ -121,6 +121,21 @@ services:
     ports: # Match port 6000 from the container to the localhost
       - "8282:8282"
     networks: # Include this container in the default network
+      - default 
+
+  dummy-device-v3: # Context provider example. Build using flask
+    build: ./dummy-device-v3 # Build this image from the ./context-providerfolder
+    hostname: dummy-device-v3
+    container_name: dummy-device-v3
+    depends_on:
+      - orion
+    volumes:
+      - ./dummy-device-v3:/code
+    expose: # Expose this port to the network
+      - "8383"
+    ports: # Match port 6000 from the container to the localhost
+      - "8383:8383"
+    networks: # Include this container in the default network
       - default    
 
 networks: # Create a network for the docker containers
