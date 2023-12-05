@@ -1,7 +1,7 @@
 // src/components/CampusList.js
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { Typography, Button, makeStyles, Container, Grid, Switch } from '@material-ui/core';
+import { Typography, Button, makeStyles, Container, Grid, Switch, TextField } from '@material-ui/core';
 import { Line } from 'react-chartjs-2';
 import 'chart.js/auto';
 import 'chartjs-adapter-date-fns';
@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     container: {
         display: 'flex',
         flexDirection: 'column',
-        maxWidth: '700px',
+        maxWidth: '1000px',
         margin: 'auto',
     },
     input: {
@@ -41,6 +41,7 @@ const DetailSala = () => {
     const [sala, setSala] = useState([]);
     const [isChecked, setIsChecked] = useState(false);
     const [message, setMessage] = useState('');
+    const [intervalInfo, setIntervalInfo] = useState({ value: '' });
 
     const [device, setDevice] = useState([]);
     const [temperature, setTemperature] = useState('');
@@ -79,15 +80,20 @@ const DetailSala = () => {
         ],
     });
 
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setIntervalInfo({ ...intervalInfo, [name]: value });
+    };
+
     const handleChangeRFID = async () => {
         setIsChecked(!isChecked);
 
-        if(isChecked){
+        if (isChecked) {
             setIsChecked(!isChecked);
             let dataChecked = {
                 "disable": {
                     "type": "command",
-                    "value": ""     
+                    "value": ""
                 }
             };
 
@@ -103,7 +109,7 @@ const DetailSala = () => {
             let dataChecked = {
                 "activate": {
                     "type": "command",
-                    "value": ""     
+                    "value": ""
                 }
             };
 
@@ -115,7 +121,7 @@ const DetailSala = () => {
             } catch (error) {
                 console.error('FAIL CONEXION', error)
             }
-        } 
+        }
     };
 
 
@@ -198,22 +204,16 @@ const DetailSala = () => {
 
         fetchDevice();
     }, [idsala]);
-    
+
     useEffect(() => {
         const socket = io('http://localhost:5000');
 
         // Manejar los datos recibidos desde el socket
         socket.on('notification', (data) => {
             console.log('DATA LLEGANDO EN BUCLE', data);
-            let temHumi = data.data[0].relativeHumidity.value;
-            let temTempe = data.data[0].temperature.value;
-            let temTime = data.data[0].temperature.metadata.TimeInstant.value;
             setTemperatureValue(data.data[0].temperature.value);
             setHumidityValue(data.data[0].relativeHumidity.value);
-            //setTemperature(temTempe);
-            //setHumidity(temHumi);
             setTimeSt(data.data[0].temperature.metadata.TimeInstant.value);
-            // Actualizar el estado del gráfico con los nuevos datos
             setChartData((prevChartData) => {
                 const newLabels = [...prevChartData.labels, new Date().toLocaleTimeString()];
                 const newTemperatureData = [...prevChartData.datasets[0].data, data.data[0].temperature.value];
@@ -269,52 +269,78 @@ const DetailSala = () => {
         }
     }
 
-    return (
-        <Container className={classes.container} style={{ marginTop: '20px' }}>
-            <Typography variant="h3" style={{ marginBottom: '16px' }}>
-                Detail of Classroom:<b> {sala?.name?.value}  </b>
-            </Typography>
+    const intervalDevice = async () => {
 
-            <h2>DHT22 <span style={{ color: '#596dd5' }}>{deviceDHT22?.name}</span>:</h2>
-
-            <h3>TimeInstant: {JSON.stringify(timeSt)}</h3>
-            <h3>Temperature: {JSON.stringify(temperatureValue)}</h3>
-            <h3>Relative Humidity: {JSON.stringify(humidityValue)}</h3>
-
-            {/*
-
-            <h3>TimeInstant: <span>{timeSt && timeSt.value}</span></h3>
-            <h3>Temperature:  <span>{temperature && temperature.value}</span></h3>
-            <h3>Relative Humidity: <span>{humidity && humidity.value}</span></h3>
-        */    
+        let dataInterval = {
+            interval: {
+                type: "command",
+                value: intervalInfo.value
+            }
         }
 
-            <h2>RFID <span style={{ color: '#ea8226' }}>{deviceRFID?.name}</span>:</h2> <Switch
-                checked={isChecked}
-                onChange={handleChangeRFID}
-                color="primary"
-                name="switch"
-                inputProps={{ 'aria-label': 'Switch' }}
-            />            
+        try {
+            const response = await fiwareService.startDevice(dataInterval, deviceDHT22.id, 'openiot', '/');
+            //console.log(response)
+        } catch (error) {
+            console.error('ERROR EN LA CONEXION', error)
+        }
+    }
 
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={startDevice}
-                disabled={!isChecked}>
-                Start Device
-            </Button>
+    return (
+        <Container className={classes.container} style={{ marginTop: '20px' }}>
+            <Grid container spacing={3}>
+                <Grid item xs={9}>
+                    <Typography variant="h3" style={{ marginBottom: '16px' }}>
+                        Detail of Classroom:<b> {sala?.name?.value}  </b>
+                    </Typography>
+                    <h2>DHT22 <span style={{ color: '#596dd5' }}>{deviceDHT22?.name}</span>:</h2>
 
-            <Button
-                variant="contained"
-                style={{ color: 'white', backgroundColor: '#b72c2c' }}
-                onClick={stopDevice}
-                disabled={!isChecked}>
-                Stop Device
-            </Button>
+                    <h3>TimeInstant: {JSON.stringify(timeSt)}</h3>
+                    <h3>Temperature: {JSON.stringify(temperatureValue)}</h3>
+                    <h3>Relative Humidity: {JSON.stringify(humidityValue)}</h3>
 
-            {//<Line data={chartData} options={chartOptions} />
-            }
+                    <h2>RFID <span style={{ color: '#ea8226' }}>{deviceRFID?.name}</span>:</h2> <Switch
+                        checked={isChecked}
+                        onChange={handleChangeRFID}
+                        color="primary"
+                        name="switch"
+                        inputProps={{ 'aria-label': 'Switch' }}
+                    />
+
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={startDevice}
+                        disabled={!isChecked}>
+                        Start Device
+                    </Button>
+
+                    <Button
+                        variant="contained"
+                        style={{ color: 'white', backgroundColor: '#b72c2c' }}
+                        onClick={stopDevice}
+                        disabled={!isChecked}>
+                        Stop Device
+                    </Button>
+
+
+                </Grid>
+
+                <Grid item xs={3}>
+                    <h2>Change interval</h2>
+                    <form>
+                        <TextField
+                            label="Tempo"
+                            name="value"
+                            value={intervalInfo.value}
+                            onChange={handleInputChange}
+                        />
+                        <Button variant="contained" color="primary" onClick={intervalDevice}>
+                            Change
+                        </Button>
+                    </form>
+                </Grid>
+            </Grid>
 
 
         </Container>
