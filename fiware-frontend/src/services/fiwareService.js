@@ -59,6 +59,21 @@ const fiwareService = {
             throw error;
         }
     },
+    getSubscriptions: async (fiwareService, fiwareServicePath) => {
+        const BASE_URL_GET_ENTITIES = `${BASE_URL}/v2/subscriptions`
+        const headers = {
+            'Content-Type': 'application/json',
+            'fiware-service': fiwareService,
+            'fiware-servicepath': fiwareServicePath,
+        };
+        try {
+            const response = await axios.get(BASE_URL_GET_ENTITIES, { headers });
+            return response.data
+        } catch (error) {
+            console.error(`Error al traer las suscripciones`, error.message);
+            throw error;
+        }
+    },
 
     getEntitiesByType: async (entityType) => {
         const BASE_URL_GET_ENTITIES = `${BASE_URL}/v2/entities?type=${entityType}`
@@ -169,6 +184,25 @@ const fiwareService = {
             return response;
         } catch (error) {
             console.error('Error al actualizar la entidad en FIWARE:', error.message);
+            throw error;
+        }
+    },
+    createSubscription: async (data, fiwareService, fiwareServicePath) => {
+        console.log('mi data', data)
+        const headers = {
+            'Content-Type': 'application/json',
+            'fiware-service': fiwareService,
+            'fiware-servicepath': fiwareServicePath,
+        };
+
+        const BASE_URL_UPDATE_DEVICE = `${BASE_URL}/v2/subscriptions/`;
+        console.log('mi ruta', BASE_URL_UPDATE_DEVICE);
+
+        try {
+            const response = await axios.post(BASE_URL_UPDATE_DEVICE, data, { headers });
+            return response;
+        } catch (error) {
+            console.error('Error al crear la subscription:', error.message);
             throw error;
         }
     },

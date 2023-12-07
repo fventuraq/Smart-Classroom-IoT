@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
 const MyMenu = () => {
 
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);  
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -104,7 +104,7 @@ const MyMenu = () => {
               <ListItemText primary="University" />
             </StyledMenuItem>
 
-            <StyledMenuItem component={RouterLink} to="/entities/campus" onClick={handleClose}>              
+            <StyledMenuItem component={RouterLink} to="/entities/campus" onClick={handleClose}>
               <ListItemIcon>
                 <AccountBalanceIcon fontSize="small" />
               </ListItemIcon>
@@ -124,10 +124,13 @@ const MyMenu = () => {
               </ListItemIcon>
               <ListItemText primary="Classroom" />
             </StyledMenuItem>
-          </StyledMenu>
+          </StyledMenu>       
 
           <Button color="inherit" component={RouterLink} to="/services" className={classes.link}>
             Services
+          </Button>
+          <Button color="inherit" component={RouterLink} to="/subscriptions" className={classes.link}>
+            Subscriptions
           </Button>
           <Button color="inherit" component={RouterLink} to="/devices/listdevices" className={classes.link}>
             Devices

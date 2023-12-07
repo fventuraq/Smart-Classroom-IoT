@@ -77,6 +77,27 @@ const DetailSala = () => {
                 pointHitRadius: 10,
                 data: [],
             },
+            {
+                label: 'Humidity',
+                fill: false,
+                lineTension: 0.1,
+                backgroundColor: 'rgba(148,159,177,0.8)',
+                borderColor: 'rgba(148,159,177,1)',
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: 'rgba(148,159,177,1)',
+                pointBackgroundColor: '#fff',
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: 'rgba(148,159,177,1)',
+                pointHoverBorderColor: 'rgba(220,220,220,1)',
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                data: [],
+            },
         ],
     });
 
@@ -143,7 +164,6 @@ const DetailSala = () => {
             },
             y: {
                 type: 'linear',
-                position: 'left',
             },
         },
     };
@@ -204,23 +224,35 @@ const DetailSala = () => {
 
         fetchDevice();
     }, [idsala]);
-
+    
     useEffect(() => {
         const socket = io('http://localhost:5000');
 
-        // Manejar los datos recibidos desde el socket
         socket.on('notification', (data) => {
             console.log('DATA LLEGANDO EN BUCLE', data);
+
+            const currentDate = new Date(data.data[0].temperature.metadata.TimeInstant.value);
+            console.log('Current Date:', currentDate.toLocaleTimeString());
+
+            const newLabel = currentDate;
+
+            console.log('New Label:', newLabel);
+            console.log('New Temperature Value:', data.data[0].temperature.value);
+            console.log('New Humidity Value:', data.data[0].relativeHumidity.value);
+
             setTemperatureValue(data.data[0].temperature.value);
             setHumidityValue(data.data[0].relativeHumidity.value);
             setTimeSt(data.data[0].temperature.metadata.TimeInstant.value);
+
             setChartData((prevChartData) => {
-                const newLabels = [...prevChartData.labels, new Date().toLocaleTimeString()];
+                const newLabels = [...prevChartData.labels, newLabel];
                 const newTemperatureData = [...prevChartData.datasets[0].data, data.data[0].temperature.value];
+                const newHumidityData = [...prevChartData.datasets[1].data, data.data[0].relativeHumidity.value];
 
                 if (newLabels.length > MAX_DATA_POINTS) {
                     newLabels.shift(); // Eliminar el punto más antiguo
                     newTemperatureData.shift(); // Eliminar el dato más antiguo
+                    newHumidityData.shift();
                 }
 
                 return {
@@ -230,14 +262,20 @@ const DetailSala = () => {
                             ...prevChartData.datasets[0],
                             data: newTemperatureData,
                         },
+                        {
+                            ...prevChartData.datasets[1],
+                            data: newHumidityData,
+                        },
                     ],
                 };
             });
         });
+
         return () => {
             socket.disconnect();
         };
     }, []);
+
 
     const startDevice = async () => {
         let dataStart = {
@@ -339,6 +377,10 @@ const DetailSala = () => {
                             Change
                         </Button>
                     </form>
+                </Grid>
+
+                <Grid item xs={12}>
+                    <Line data={chartData} options={chartOptions} />
                 </Grid>
             </Grid>
 

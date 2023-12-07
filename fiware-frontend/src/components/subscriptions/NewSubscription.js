@@ -105,12 +105,12 @@ const CreateSubscription = () => {
                     "temperature",
                     "relativeHumidity"],
             },
-            throttling: subscriptionInfo.throttling,
+            throttling: Number(subscriptionInfo.throttling),
 
         }
         try {
-            //const fiwareResponse = await fiwareService.sendSubscription(subscriptionInfo);
-            const fiwareResponse = await fiwareService.getTest(data);
+            const fiwareResponse = await fiwareService.createSubscription(data, 'openiot', '/');
+            //const fiwareResponse = await fiwareService.getTest(data);
             console.log('Successfully created subscription!', fiwareResponse);
             setResponse('Successfully created subscription!');
             setSuccess(true);

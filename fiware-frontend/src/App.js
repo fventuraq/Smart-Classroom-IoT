@@ -22,6 +22,7 @@ import CreateDeviceEntity from './components/devices/NewDevice';
 import DetailDevice from './components/devices/DetailDevice';
 import ServiceList from './components/services/ListServices';
 import CreateService from './components/services/NewService';
+import ListSuscriptions from './components/subscriptions/ListSuscriptions';
 import CreateSubscription from './components/subscriptions/NewSubscription';
 import MyMenu from './components/MyMenu'; // Agrega esta línea para importar el componente Menu
 
@@ -53,6 +54,7 @@ const App = () => {
           <Route path="/entities/newsala" element={<CreateSalaEntity />} />
           <Route path="/entities/campus/:iduniversity" element={<ListCampusUniversity />} />
           <Route path="/entities/room" element={<ListEntities />} />
+          <Route path="/subscriptions" element={<ListSuscriptions />} />
           <Route path="/subscriptions/newsubscription" element={<CreateSubscription />} />
         </Routes>
       </div>
