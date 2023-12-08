@@ -61,8 +61,9 @@ const ListSuscriptions = () => {
           {subscriptions?.map((entity) => (
             <li key={entity.id}>
               <Typography variant="body1">
-                {entity.description} -{' '}
-                <RouterLink to={`/`}>Delete Subsctiption</RouterLink>
+                {entity.description} {' '}
+                {//<RouterLink to={`/`}>Delete Subsctiption</RouterLink>
+                }
               </Typography>
             </li>
           ))}

@@ -75,7 +75,7 @@ def sendData():
             humidity = random.randint(0,100)
             temperature = random.randint(10,40)
 
-            url = "http://fiware-iot-agent-json:7896/iot/json?k=4jggokgpepnvsb2uv4s40d59ov&i=device050"
+            url = "http://fiware-iot-agent-json:7896/iot/json?k=4jggokgpepnvsb2uv4s40d59ov&i=device001"
 
             payload = json.dumps({
                 "temperature": temperature,

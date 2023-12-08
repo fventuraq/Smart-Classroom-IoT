@@ -129,11 +129,13 @@ const MyMenu = () => {
           <Button color="inherit" component={RouterLink} to="/services" className={classes.link}>
             Services
           </Button>
-          <Button color="inherit" component={RouterLink} to="/subscriptions" className={classes.link}>
-            Subscriptions
-          </Button>
+          
           <Button color="inherit" component={RouterLink} to="/devices/listdevices" className={classes.link}>
             Devices
+          </Button>
+
+          <Button color="inherit" component={RouterLink} to="/subscriptions" className={classes.link}>
+            Subscriptions
           </Button>
 
         </Toolbar>

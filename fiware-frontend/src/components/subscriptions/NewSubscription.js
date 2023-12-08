@@ -158,7 +158,7 @@ const CreateSubscription = () => {
 
                     <Grid item xs={12}>
                         <FormControl className={classes.formControl} fullWidth>
-                            <InputLabel>Size</InputLabel>
+                            <InputLabel>Variable to monitor</InputLabel>
                             <Select
                                 name="atrribute"
                                 value={subscriptionInfo.atrribute}
@@ -170,6 +170,12 @@ const CreateSubscription = () => {
                                 <MenuItem value='relativeHumidity'>
                                     Humidity
                                 </MenuItem>
+                                <MenuItem value='rfid'>
+                                    RFID status
+                                </MenuItem>
+                                <MenuItem value='other'>
+                                    Other
+                                </MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
@@ -178,7 +184,7 @@ const CreateSubscription = () => {
                         <TextField
                             fullWidth
                             className={classes.input}
-                            label="Url"
+                            label="Url = http://192.168.0.106:5000/notify"
                             name="url"
                             value={subscriptionInfo.url}
                             onChange={handleInputChange}

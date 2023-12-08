@@ -224,57 +224,60 @@ const DetailSala = () => {
 
         fetchDevice();
     }, [idsala]);
-    
+
     useEffect(() => {
         const socket = io('http://localhost:5000');
 
         socket.on('notification', (data) => {
-            console.log('DATA LLEGANDO EN BUCLE', data);
+            console.log('DATA LLEGANDO EN BUCLE', data.data[0].id, deviceDHT22?.id );
 
-            const currentDate = new Date(data.data[0].temperature.metadata.TimeInstant.value);
-            console.log('Current Date:', currentDate.toLocaleTimeString());
+            if (data?.data[0]?.id == deviceDHT22?.id) {                
 
-            const newLabel = currentDate;
+                const currentDate = new Date(data.data[0].temperature.metadata.TimeInstant.value);
+                console.log('Current Date:', currentDate.toLocaleTimeString());
 
-            console.log('New Label:', newLabel);
-            console.log('New Temperature Value:', data.data[0].temperature.value);
-            console.log('New Humidity Value:', data.data[0].relativeHumidity.value);
+                const newLabel = currentDate;
 
-            setTemperatureValue(data.data[0].temperature.value);
-            setHumidityValue(data.data[0].relativeHumidity.value);
-            setTimeSt(data.data[0].temperature.metadata.TimeInstant.value);
+                console.log('New Label:', newLabel);
+                console.log('New Temperature Value:', data.data[0].temperature.value);
+                console.log('New Humidity Value:', data.data[0].relativeHumidity.value);
 
-            setChartData((prevChartData) => {
-                const newLabels = [...prevChartData.labels, newLabel];
-                const newTemperatureData = [...prevChartData.datasets[0].data, data.data[0].temperature.value];
-                const newHumidityData = [...prevChartData.datasets[1].data, data.data[0].relativeHumidity.value];
+                setTemperatureValue(data.data[0].temperature.value);
+                setHumidityValue(data.data[0].relativeHumidity.value);
+                setTimeSt(data.data[0].temperature.metadata.TimeInstant.value);
 
-                if (newLabels.length > MAX_DATA_POINTS) {
-                    newLabels.shift(); // Eliminar el punto más antiguo
-                    newTemperatureData.shift(); // Eliminar el dato más antiguo
-                    newHumidityData.shift();
-                }
+                setChartData((prevChartData) => {
+                    const newLabels = [...prevChartData.labels, newLabel];
+                    const newTemperatureData = [...prevChartData.datasets[0].data, data.data[0].temperature.value];
+                    const newHumidityData = [...prevChartData.datasets[1].data, data.data[0].relativeHumidity.value];
 
-                return {
-                    labels: newLabels,
-                    datasets: [
-                        {
-                            ...prevChartData.datasets[0],
-                            data: newTemperatureData,
-                        },
-                        {
-                            ...prevChartData.datasets[1],
-                            data: newHumidityData,
-                        },
-                    ],
-                };
-            });
+                    if (newLabels.length > MAX_DATA_POINTS) {
+                        newLabels.shift(); // Eliminar el punto más antiguo
+                        newTemperatureData.shift(); // Eliminar el dato más antiguo
+                        newHumidityData.shift();
+                    }
+
+                    return {
+                        labels: newLabels,
+                        datasets: [
+                            {
+                                ...prevChartData.datasets[0],
+                                data: newTemperatureData,
+                            },
+                            {
+                                ...prevChartData.datasets[1],
+                                data: newHumidityData,
+                            },
+                        ],
+                    };
+                });
+            }
         });
 
         return () => {
             socket.disconnect();
         };
-    }, []);
+    }, [deviceDHT22]);
 
 
     const startDevice = async () => {
@@ -284,9 +287,10 @@ const DetailSala = () => {
                 value: ''
             }
         };
+        console.log('data enviada start...', dataStart)
         try {
             const response = await fiwareService.startDevice(dataStart, deviceDHT22.id, 'openiot', '/');
-            //console.log(response)
+            //console.log(response)  deviceDHT22.name
         } catch (error) {
             console.error('ERROR EN LA CONEXION', error)
         }
