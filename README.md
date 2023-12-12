@@ -57,8 +57,8 @@ A criação de ‘Devices’ também é feita através de um formulário na apli
 
 <span>Para inicializar os servidores proxy você deve ir até a pasta fiware-frontend/src e executar os seguintes comandos.</span>
 <ul>
-  <li>node proxy.js</li>
-  <li>node proxy2.js</li>
+  <li><code>node proxy.js</code></li>
+  <li><code>node proxy2.js</code></li>
 </ul>
 
 Quando os 'Devices' são iniciados, eles enviam dados periodicamente ao IoT Agent, que é responsável por validar se o 'Device' está autorizado para enviar dados. Após a autorização do Device pelo IoT Agent, seus dados são enviados para o Orion, que se encarrega de registrar esses dados no MongoDB.
@@ -69,7 +69,7 @@ Na nossa proposta, o Orion não pode estabelecer uma comunicação direta com a 
 
 Para inicializar o microservidor você deve ir até a pasta fiware-frontend/src e executar os seguintes comandos.
 <ul>
-  <li>node server.js</li>
+  <li><code>node server.js</code></li>
 </ul>
 
 Ao criar a assinatura, lembre-se que o endereço onde as notificações chegaram é no seu IP na porta 5000/notify.
